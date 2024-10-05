@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistMono } from "geist/font/mono"
-import { Work_Sans, Open_Sans } from "next/font/google"
+import { Work_Sans, Open_Sans, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 
 const workSans = Work_Sans({
@@ -14,6 +13,12 @@ const openSans = Open_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-open-sans",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
 })
 
 export const metadata: Metadata = {
@@ -35,12 +40,12 @@ export default function RootLayout({
 html {
   font-family: ${openSans.style.fontFamily};
   --font-sans: ${openSans.variable};
-  --font-mono: ${GeistMono.variable};
+  --font-mono: ${jetbrainsMono.variable};
   --font-heading: ${workSans.variable};
 }
         `}</style>
       </head>
-      <body className={`${workSans.variable} ${openSans.variable} ${GeistMono.variable}`}>{children}</body>
+      <body className={`${workSans.variable} ${openSans.variable} ${jetbrainsMono.variable}`}>{children}</body>
     </html>
   )
 }
