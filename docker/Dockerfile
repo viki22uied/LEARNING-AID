@@ -1,4 +1,5 @@
-FROM python:3.9-slim
+# syntax=docker/dockerfile:1.4
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
