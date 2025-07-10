@@ -370,4 +370,15 @@ MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
+## About (GitHub Repository Settings)
+
+- **Description:** Real-time open-education recommendation backend + Next.js frontend — semantic search, Whisper STT, vector search (FAISS/Qdrant) over Wikipedia/OpenStax/arXiv.
+- **Website:** `http://localhost:8000/docs` (or your deployed URL)
+- **Topics:** `nextjs` `fastapi` `open-education` `oer` `whisper` `vector-search` `faiss` `qdrant` `ai` `education` `typescript` `python`
+- **Tags:** See `RECONSTRUCTED_HISTORY` — `v0.1.0`, `v0.5.0`, `v1.0.0`
+
+> To set these on GitHub: Repo → Settings → General → About → Edit (add description/website/topics) and `git push --tags`.
+
+---
+
 <p align="center">Built for open education · MIT Licensed · PRs welcome</p>
