@@ -1,135 +1,195 @@
-# Open Educational Resources Recommendation Backend
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=flat&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat" />
+  <img src="https://img.shields.io/badge/Open%20Source-100%25-brightgreen?style=flat" />
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white" />
+</p>
 
-A fully open-source, real-time educational resource recommendation system that provides free, openly-licensed learning materials through semantic search and WebSocket-based streaming recommendations.
+<h1 align="center">LEARNING-AID</h1>
+<h3 align="center">Open Educational Resources Recommendation Backend</h3>
 
-## 🚀 Features
+<p align="center">
+  A real-time, fully open-source backend that surfaces free, openly-licensed learning materials the moment students need them — powered by semantic search, speech recognition, and WebSocket streaming.
+</p>
 
-- **100% Open Source**: All components, data sources, and recommendations are free and redistributable
-- **Real-time Intelligence**: Provides contextual learning resources as users speak or type
-- **Legal Compliance**: Strict adherence to open licenses with full attribution and transparency
-- **Zero Cost**: No proprietary APIs or paid services required
-- **Semantic Search**: Advanced vector-based search using sentence transformers
-- **Speech-to-Text**: Real-time audio processing with Whisper
-- **WebSocket API**: Real-time bidirectional communication
-- **Multi-source Harvesting**: Content from Wikipedia, OpenStax, arXiv, and more
+---
 
-## 🏗️ Architecture
+## What It Does
+
+Students shouldn't have to search for learning materials. LEARNING-AID listens as they speak or type, extracts the concepts they're engaging with, and streams relevant open educational resources back in real time — all from free, openly-licensed sources like Wikipedia, OpenStax, and arXiv.
+
+No proprietary APIs. No paid services. No licensing headaches. Every recommendation is traceable to a source you can legally use, share, and redistribute.
 
 ```
-[Speech Input] → [STT Engine] → [Concept Extraction] → [Vector Search] → [Recommendation API] → [WebSocket Client]
-                                        ↓
-[Open Content Sources] → [Harvester] → [Text Processor] → [Embeddings] → [FAISS/Qdrant Index]
+[Speech / Text Input]
+        ↓
+[STT Engine — Whisper]
+        ↓
+[Concept Extraction — spaCy + KeyBERT]
+        ↓
+[Vector Search — FAISS / Qdrant]
+        ↓
+[WebSocket Stream → Client]
+        ↑
+[Content Harvester] ← [Wikipedia · OpenStax · arXiv · OER Commons · MIT OCW]
 ```
 
-## 🛠️ Technology Stack
+---
 
-### Core Framework
-- **Backend**: FastAPI (Python 3.9+)
-- **WebSocket**: FastAPI WebSockets + uvicorn ASGI server
-- **Database**: PostgreSQL (primary) + SQLite (development/testing)
-- **Caching**: Redis (optional, for session management)
+## Features
 
-### ML/AI Stack
-- **Speech-to-Text**: OpenAI Whisper (`whisper` or `faster-whisper`)
-- **Embeddings**: Sentence Transformers (`sentence-transformers`)
-- **Vector Database**: Qdrant (persistent, scalable) + FAISS (local development)
-- **NLP**: spaCy + KeyBERT for concept extraction
+| Feature | Details |
+|---|---|
+| 🔍 **Semantic Search** | Vector similarity search via Sentence Transformers — finds conceptually relevant content, not just keyword matches |
+| 🎙️ **Real-time Speech-to-Text** | Live audio processing with OpenAI Whisper, streamed over WebSocket |
+| ⚡ **WebSocket API** | Bidirectional real-time communication — results stream as concepts are detected |
+| 📚 **Multi-source Harvesting** | Pulls from Wikipedia, OpenStax, arXiv, OER Commons, MIT OpenCourseWare |
+| ✅ **License Compliance** | Every resource tagged with its open license (CC-BY, CC-BY-SA, Public Domain) — full attribution built in |
+| 💰 **Zero Cost** | No paid APIs, no proprietary services — fully reproducible on open infrastructure |
+| 🐳 **Docker Ready** | One command to spin up the full stack including vector DB and cache |
+| 📊 **Prometheus Metrics** | Built-in observability — health checks, structured logging, request tracing |
+
+---
+
+## Tech Stack
+
+### Backend
+- **[FastAPI](https://fastapi.tiangolo.com/)** — async Python web framework with built-in OpenAPI docs
+- **[uvicorn](https://www.uvicorn.org/)** — ASGI server for WebSocket and async support
+- **PostgreSQL** — primary database · **SQLite** for development/testing
+- **Redis** — optional session management and caching
+
+### ML / AI
+- **[OpenAI Whisper](https://github.com/openai/whisper)** (`whisper` or `faster-whisper`) — speech-to-text
+- **[Sentence Transformers](https://www.sbert.net/)** — semantic embeddings (`all-MiniLM-L6-v2` default)
+- **[Qdrant](https://qdrant.tech/)** — persistent vector database for production
+- **[FAISS](https://faiss.ai/)** — local vector search for development
+- **[spaCy](https://spacy.io/) + [KeyBERT](https://github.com/MaartenGr/KeyBERT)** — NLP concept extraction
 
 ### Content Processing
-- **PDF Processing**: PyMuPDF (fitz) + pdfminer.six
-- **Web Scraping**: BeautifulSoup4 + newspaper3k + readability-lxml
-- **HTTP Client**: aiohttp (async) + requests (sync fallback)
+- **PyMuPDF (fitz) + pdfminer.six** — PDF parsing
+- **BeautifulSoup4 + newspaper3k + readability-lxml** — web content extraction
+- **aiohttp** — async HTTP client for harvesting
 
-## 📦 Installation
+---
+
+## Performance
+
+| Metric | Target |
+|---|---|
+| WebSocket connection latency | < 100ms |
+| Search query processing | < 500ms |
+| STT processing (10s audio) | < 2s |
+| Vector search (10k+ embeddings) | < 200ms |
+| Concurrent WebSocket connections | 100+ |
+| Search requests per second | 50+ |
+| Content harvest rate | 1,000+ resources/hour |
+
+---
+
+## Getting Started
 
 ### Prerequisites
+
 - Python 3.9+
 - PostgreSQL (or SQLite for development)
-- Redis (optional)
-- Qdrant (optional, can use FAISS for development)
+- Redis *(optional)*
+- Qdrant *(optional — FAISS used as fallback in development)*
 
-### Quick Start
+### Local Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd open-edu-backend
-   ```
+**1. Clone the repository**
+```bash
+git clone <repo-url>
+cd open-edu-backend
+```
 
-2. **Set up virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+**2. Create and activate virtual environment**
+```bash
+python -m venv venv
+source venv/bin/activate       # macOS / Linux
+venv\Scripts\activate          # Windows
+```
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements/dev.txt
-   ```
+**3. Install dependencies**
+```bash
+pip install -r requirements/dev.txt
+```
 
-4. **Configure environment**
-   ```bash
-   cp env.example .env
-   # Edit .env with your configuration
-   ```
+**4. Configure environment**
+```bash
+cp env.example .env
+# Edit .env with your local configuration
+```
 
-5. **Initialize database**
-   ```bash
-   alembic upgrade head
-   ```
+**5. Initialize the database**
+```bash
+alembic upgrade head
+```
 
-6. **Start the server**
-   ```bash
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
+**6. Start the server**
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-### Docker Setup
+The API will be live at `http://localhost:8000`
+Interactive docs at `http://localhost:8000/docs`
 
-1. **Build and run with Docker Compose**
-   ```bash
-   docker-compose -f docker/docker-compose.yml up --build
-   ```
+---
 
-2. **Access the application**
-   - API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-   - Health Check: http://localhost:8000/health
+### Docker Setup *(recommended)*
 
-## 🔧 Configuration
+```bash
+docker-compose -f docker/docker-compose.yml up --build
+```
+
+| Service | URL |
+|---|---|
+| API | http://localhost:8000 |
+| API Docs | http://localhost:8000/docs |
+| Health Check | http://localhost:8000/health |
+
+---
+
+## Configuration
 
 ### Environment Variables
 
 | Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | Database connection string | `postgresql://user:pass@localhost:5432/open_edu_db` |
+|---|---|---|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/open_edu_db` |
 | `REDIS_URL` | Redis connection string | `redis://localhost:6379/0` |
-| `EMBEDDINGS_MODEL` | Sentence transformer model | `all-MiniLM-L6-v2` |
-| `STT_MODEL` | Whisper model | `whisper-base` |
-| `VECTOR_DB_TYPE` | Vector database type | `qdrant` |
+| `EMBEDDINGS_MODEL` | Sentence Transformer model name | `all-MiniLM-L6-v2` |
+| `STT_MODEL` | Whisper model size | `whisper-base` |
+| `VECTOR_DB_TYPE` | Vector DB backend (`qdrant` or `faiss`) | `qdrant` |
 | `QDRANT_URL` | Qdrant server URL | `http://localhost:6333` |
-| `API_HOST` | API host | `0.0.0.0` |
-| `API_PORT` | API port | `8000` |
+| `API_HOST` | Server bind host | `0.0.0.0` |
+| `API_PORT` | Server bind port | `8000` |
+| `ADMIN_API_KEY` | Admin endpoint authentication key | *(required in production)* |
 
 ### Content Sources
 
-The system supports harvesting from multiple open educational sources:
+| Source | License | Content Type |
+|---|---|---|
+| Wikipedia / Wikibooks / Wikiversity | Public Domain · CC-BY-SA | Encyclopedia, textbooks, courses |
+| OpenStax | CC-BY 4.0 | Peer-reviewed textbooks |
+| OER Commons | Various open licenses | Curated educational resources |
+| arXiv | Various open licenses | Academic preprints and papers |
+| MIT OpenCourseWare | CC-BY-NC-SA | University course materials |
 
-- **Wikipedia/Wikibooks/Wikiversity**: Public Domain/CC-BY-SA
-- **OpenStax**: CC-BY 4.0 textbooks
-- **OER Commons**: Curated open educational resources
-- **arXiv**: Academic preprints
-- **MIT OpenCourseWare**: Various open licenses
+---
 
-## 📡 API Usage
+## API Reference
 
 ### WebSocket API
 
-Connect to the WebSocket endpoint for real-time recommendations:
+Connect to `/api/v1/recommendations/stream` for real-time recommendations.
 
+**Semantic search request:**
 ```javascript
 const ws = new WebSocket('ws://localhost:8000/api/v1/recommendations/stream');
 
-// Search request
 ws.send(JSON.stringify({
   type: "search",
   data: {
@@ -141,198 +201,173 @@ ws.send(JSON.stringify({
     }
   }
 }));
+```
 
-// Audio chunk for STT
+**Live audio streaming (speech-to-text):**
+```javascript
 ws.send(JSON.stringify({
   type: "audio_chunk",
   data: {
-    audio_data: "base64_encoded_audio",
+    audio_data: "<base64_encoded_audio>",
     format: "wav",
     is_final: false
   }
 }));
 ```
 
+---
+
 ### REST API
 
-#### Search Resources
+**Search resources**
 ```bash
-curl -X POST "http://localhost:8000/api/v1/resources/search" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "machine learning algorithms",
-    "filters": {
-      "license_types": ["CC-BY-4.0"],
-      "max_results": 5
-    }
-  }'
+POST /api/v1/resources/search
+```
+```json
+{
+  "query": "machine learning algorithms",
+  "filters": {
+    "license_types": ["CC-BY-4.0"],
+    "max_results": 5
+  }
+}
 ```
 
-#### List Resources
+**List resources**
 ```bash
-curl "http://localhost:8000/api/v1/resources/?limit=10&resource_type=document"
+GET /api/v1/resources/?limit=10&resource_type=document
 ```
 
-#### Get Resource Details
+**Get resource by ID**
 ```bash
-curl "http://localhost:8000/api/v1/resources/{resource_id}"
+GET /api/v1/resources/{resource_id}
 ```
+
+---
 
 ### Admin API
 
-#### Trigger Content Harvest
+All admin endpoints require the `X-Admin-API-Key` header.
+
+**Trigger content harvest**
 ```bash
-curl -X POST "http://localhost:8000/api/v1/admin/harvest" \
-  -H "X-Admin-API-Key: your_admin_key" \
-  -H "Content-Type: application/json" \
-  -d '{"source": "wikipedia", "subjects": ["mathematics", "physics"]}'
+POST /api/v1/admin/harvest
+```
+```json
+{
+  "source": "wikipedia",
+  "subjects": ["mathematics", "physics"]
+}
 ```
 
-#### Get System Stats
+**Get system stats**
 ```bash
-curl "http://localhost:8000/api/v1/admin/stats" \
-  -H "X-Admin-API-Key: your_admin_key"
+GET /api/v1/admin/stats
 ```
 
-## 🔍 Search Features
+---
 
-### Semantic Search
-- Vector-based similarity search using sentence transformers
-- Support for multiple embedding models
-- Configurable similarity thresholds
+## Monitoring
 
-### Filters
-- License type filtering
-- Resource type filtering
-- Difficulty level filtering
-- Language filtering
-- Source platform filtering
+### Health Endpoints
 
-### Real-time Processing
-- Live speech-to-text transcription
-- Automatic concept extraction
-- Instant recommendation generation
-
-## 📊 Monitoring
-
-### Health Checks
-- `/health` - Basic health check
-- `/api/v1/status` - Detailed system status
-- `/metrics` - Prometheus metrics
+| Endpoint | Purpose |
+|---|---|
+| `GET /health` | Basic liveness check |
+| `GET /api/v1/status` | Detailed system status (DB, vector DB, cache) |
+| `GET /metrics` | Prometheus-compatible metrics |
 
 ### Logging
-- Structured JSON logging
-- Configurable log levels
-- Request/response logging
-- Error tracking
 
-## 🧪 Testing
+Structured JSON logging across all services. Configure via `LOG_LEVEL` in `.env`. Request/response logging and error tracking included out of the box.
 
-### Run Tests
+---
+
+## Testing
+
+**Run the full test suite**
 ```bash
 pytest tests/
 ```
 
-### Run with Coverage
+**Run with coverage report**
 ```bash
 pytest --cov=app tests/
 ```
 
-### Load Testing
+**Load testing with Locust**
 ```bash
-# Install locust
 pip install locust
-
-# Run load test
 locust -f tests/load_test.py
 ```
 
-## 🚀 Deployment
+---
 
-### Production Deployment
+## Deployment
 
-1. **Set up production environment**
-   ```bash
-   pip install -r requirements/prod.txt
-   ```
+### Production with Gunicorn
 
-2. **Configure production settings**
-   - Set `DATABASE_URL` to production PostgreSQL
-   - Configure `QDRANT_URL` for production Qdrant
-   - Set `ADMIN_API_KEY` for admin access
-   - Configure logging and monitoring
-
-3. **Run with Gunicorn**
-   ```bash
-   gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker \
-     --bind 0.0.0.0:8000 --timeout 300
-   ```
-
-### Docker Production
 ```bash
-docker build -f docker/Dockerfile -t open-edu-backend .
-docker run -p 8000:8000 open-edu-backend
+pip install -r requirements/prod.txt
+
+gunicorn app.main:app \
+  -w 4 \
+  -k uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:8000 \
+  --timeout 300
 ```
 
-## 📈 Performance
+### Production Checklist
 
-### Response Times
-- **WebSocket Connection**: < 100ms
-- **Search Query Processing**: < 500ms
-- **STT Processing**: < 2s for 10s audio clip
-- **Vector Search**: < 200ms for 10k+ embeddings
+- [ ] Set `DATABASE_URL` to production PostgreSQL instance
+- [ ] Set `QDRANT_URL` to production Qdrant instance
+- [ ] Set a strong `ADMIN_API_KEY`
+- [ ] Configure Redis for session management
+- [ ] Set `LOG_LEVEL=INFO` and point logs to your observability stack
+- [ ] Run `alembic upgrade head` on first deploy
 
-### Throughput
-- **Concurrent WebSocket Connections**: 100+
-- **Search Requests per Second**: 50+
-- **Harvest Rate**: 1000+ resources per hour
+### Docker (Production)
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
-
-### Development Setup
 ```bash
-# Install development dependencies
-pip install -r requirements/dev.txt
-
-# Install pre-commit hooks
-pre-commit install
-
-# Run code formatting
-black app/
-isort app/
-
-# Run linting
-flake8 app/
+docker build -f docker/Dockerfile -t learning-aid .
+docker run -p 8000:8000 --env-file .env learning-aid
 ```
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [FastAPI](https://fastapi.tiangolo.com/) for the web framework
-- [Sentence Transformers](https://www.sbert.net/) for semantic search
-- [OpenAI Whisper](https://github.com/openai/whisper) for speech recognition
-- [Qdrant](https://qdrant.tech/) for vector database
-- All open educational content providers
-
-## 📞 Support
-
-For questions, issues, or contributions:
-- Create an issue on GitHub
-- Join our community discussions
-- Check the documentation at `/docs` when running the server
 
 ---
 
-**Built with ❤️ for open education**
-#   L E A R N I N G - A I D  
- 
+## Contributing
+
+Contributions are welcome. Please follow the standard fork → branch → PR flow.
+
+```bash
+# Install dev dependencies and pre-commit hooks
+pip install -r requirements/dev.txt
+pre-commit install
+
+# Format and lint before committing
+black app/
+isort app/
+flake8 app/
+```
+
+For significant changes, open an issue first to discuss the approach. All new functionality should include tests.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
+
+---
+
+## Acknowledgements
+
+- [FastAPI](https://fastapi.tiangolo.com/) — the web framework powering this backend
+- [Sentence Transformers](https://www.sbert.net/) — semantic search embeddings
+- [OpenAI Whisper](https://github.com/openai/whisper) — open speech recognition
+- [Qdrant](https://qdrant.tech/) — vector database
+- Every open educational content provider making knowledge freely available
+
+---
+
+<p align="center">Built for open education · MIT Licensed · PRs welcome</p>
